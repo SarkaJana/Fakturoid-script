@@ -1,4 +1,4 @@
-#FAKTUROID 
+# FAKTUROID 
 
 Fakturoid script passes the jira.csv to fakturoid.cz to create an invoice.
 
