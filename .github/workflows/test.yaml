@@ -1,0 +1,15 @@
+name: Test yaml
+on: push
+jobs:
+  run-test-job:
+    name: Test job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7.7'
+      - run: python -m unittest test_jira_to_fakturoid-import.py
+        name: Run tests
