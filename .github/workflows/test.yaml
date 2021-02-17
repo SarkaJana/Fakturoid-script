@@ -47,5 +47,5 @@ jobs:
           IP_ADDRESS: ${{ secrets.SERVER_IP }}
         run: |
           sudo apt-get install -y sshpass
-          sshpass -p $PASSWORD ssh root@$IP_ADDRESS
+          sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no root@$IP_ADDRESS
 
