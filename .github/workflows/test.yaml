@@ -41,16 +41,17 @@ jobs:
     needs: push-docker-image
     runs-on: ubuntu-latest
     steps:
-      - name: Log in to server
-        env:
-          PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-          IP_ADDRESS: ${{ secrets.SERVER_IP }}
-        run: |
-          sudo apt-get install -y sshpass
-          sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no root@$IP_ADDRESS
-          cat /etc/os-release
-          apk add docker
-          service docker start
-          docker pull sarkajana/fakturoid:latest
-          docker run sarkajana/fakturoid:latest
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          password: ${{ secrets.SERVER_PASSWORD  }}
+          script: |
+            cat /etc/os-release
+            apk add docker
+            service docker start
+            docker pull sarkajana/fakturoid:latest
+            docker run sarkajana/fakturoid:latest
+
 
