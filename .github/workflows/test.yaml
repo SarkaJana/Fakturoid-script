@@ -16,6 +16,7 @@ jobs:
       - run: python -m unittest test_jira_to_fakturoid-import.py
         name: Run tests
   push-docker-image:
+    needs: run-test-job
     name: Push docker image
     runs-on: ubuntu-latest
     steps:
