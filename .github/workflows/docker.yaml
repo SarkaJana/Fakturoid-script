@@ -1,0 +1,45 @@
+name: Docker image to server
+on:
+  push:
+    branches:
+      - main
+jobs:
+  push-docker-image:
+    name: Push docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: sarkajana/fakturoid:latest
+  run-dockerimage-on-server:
+    needs: push-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          password: ${{ secrets.SERVER_PASSWORD  }}
+          script: |
+            cat /etc/os-release
+            apk add docker
+            service docker start
+            docker pull sarkajana/fakturoid:latest
+            docker run sarkajana/fakturoid:latest
+
+
