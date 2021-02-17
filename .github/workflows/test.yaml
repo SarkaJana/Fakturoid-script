@@ -37,3 +37,15 @@ jobs:
         with:
           push: true
           tags: sarkajana/fakturoid:latest
+  run-dockerimage-on-server:
+    needs: push-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to server
+        env:
+          PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          IP_ADDRESS: ${{ secrets.SERVER_IP }}
+        run: |
+          sudo apt-get install -y sshpass
+          sshpass -p $PASSWORD ssh root@$IP_ADDRESS
+
